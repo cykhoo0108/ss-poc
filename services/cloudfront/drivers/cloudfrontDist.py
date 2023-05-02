@@ -27,7 +27,7 @@ class cloudfrontDist(Evaluator):
         webACL = resp['DistributionConfig']['WebACLId']
         print('WebACL : ' + str(webACL))
         if webACL == '':
-            self.results['WAF'] = [-1, 'Not Associated']
+            self.results['WAFAssociation'] = [-1, 'Not Associated']
             
     def _checkDefaultRootObject(self):
         dist = self.dist
@@ -51,7 +51,7 @@ class cloudfrontDist(Evaluator):
         deprecatedSSL = resp['DistributionConfig']['Origins']['Items'][0]['CustomOriginConfig']['OriginSslProtocols']['Items']
         print('Protocols : ' + str(deprecatedSSL))
         if 'SSLv3' in deprecatedSSL:
-            self.results['usingDeprecatedSSL'] = [-1, 'Yes']
+            self.results['DeprecatedSSLProtocol'] = [-1, 'Yes']
     
     def _checkOriginFailover(self):
         dist = self.dist
@@ -60,8 +60,25 @@ class cloudfrontDist(Evaluator):
         print('Origins : ' + str(originQuantity))
         if originQuantity <= 1:
             self.results['originFailover'] = [-1, 'No']
+            
+    def _checkFieldLevelEncryption(self):
+        dist = self.dist
+        resp = self.cloudfrontClient.get_distribution_config(Id=dist)
+        encryption = resp['DistributionConfig']['DefaultCacheBehavior']['FieldLevelEncryptionId']
+        print('fieldLevelEncryptionId : ' + str(encryption))
+        if encryption == '':
+            self.results['fieldLevelEncryption'] = [-1, 'No']
+            
+    def _checkViewerPolicyHttps(self):
+        dist = self.dist
+        resp = self.cloudfrontClient.get_distribution_config(Id=dist)
+        policy = resp['DistributionConfig']['DefaultCacheBehavior']['ViewerProtocolPolicy']
+        print('viewerPolicy : ' + str(policy))
+        if policy == 'allow-all':
+            self.results['viewerPolicyHttps'] = [-1, 'No']
     
-        
+    
+    
 if __name__ == "__main__":
     c = boto3.client('cloudfront')
     o = cloudfrontDist('ok', c)
