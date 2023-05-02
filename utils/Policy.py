@@ -7,7 +7,8 @@ class Policy:
     }
     
     def __init__(self, document):
-        self.doc = json.loads(document)
+        self.doc = document
+        # self.doc = json.loads(document)
     
     def inspectAccess(self):
         doc = self.doc

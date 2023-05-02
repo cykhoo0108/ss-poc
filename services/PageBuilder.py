@@ -5,6 +5,7 @@ import json
 
 from utils.Config import Config
 from utils.Tools import _warn
+import constants as _C
 
 class PageBuilder:
     serviceIcon = {
@@ -61,7 +62,7 @@ class PageBuilder:
             if arrayOfText:
                 finalHTML += "\n".join(arrayOfText)
 
-        with open(Config.DIR_HTML + '/' + self.service + '.html', 'w') as f:
+        with open(_C.HTML_DIR + '/' + self.service + '.html', 'w') as f:
             f.write(finalHTML)
     
     def init(self):
@@ -346,7 +347,7 @@ class PageBuilder:
         return "\n".join(output)
         
     def _getTemplateByKey(self, key):
-        path = Config.DIR_TEMPLATE + '/' + self.pageTemplate[key]
+        path = _C.TEMPLATE_DIR + '/' + self.pageTemplate[key]
         
         if os.path.exists(path):
             return path
@@ -489,7 +490,7 @@ class PageBuilder:
             res = attrs['__affectedResources']
             for region in regions:
                 cnt = 0
-                if res[region]:
+                if region in res:
                     cnt = len(res[region])
                 dataSets.setdefault(region, []).append(cnt)
         

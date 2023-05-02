@@ -1,4 +1,7 @@
-# from abc import ABC
+import traceback
+
+from utils.Config import Config
+import constants as _C
 
 class Evaluator():
     def __init__(self):
@@ -9,13 +12,9 @@ class Evaluator():
         self.classname = type(self).__name__
         
     def run(self):
-        # global CONFIG
-        FORK_DIR = '.';
-        # servClass = self.classname.split('_')
         servClass = self.classname
         rulePrefix = servClass + '::rules'
-        rules = []
-        # rules = CONFIG.get(rulePrefix, [])
+        rules = Config.get(rulePrefix, [])
         
         ecnt = cnt = 0
         emsg = []
@@ -26,22 +25,22 @@ class Evaluator():
                     # print('--- --- fn: ' + method)
                     getattr(self, method)()
                     cnt += 1
-                except Exception as e:
+                except Exception:
                     ecnt += 1
-                    # emsg.append(__formatException(e))
+                    print(traceback.format_exc())
+                    emsg.append(traceback.format_exc())
             
         if emsg:
-            #__warn("Catch: {} exception(s)".format(ecnt))
-            with open(FORK_DIR + '/error.txt', 'a+') as f:
+            with open(_C.FORK_DIR + '/error.txt', 'a+') as f:
                 f.write('\n\n'.join(emsg))
                 f.close()
                 
-        # scanned = CONFIG.get('scanned')
-        # CONFIG.set('scanned', {
-        #    'resources': scanned['resources'] + 1,
-        #    'rules': scanned['rules'] + cnt,
-        #    'exceptions': scanned['exceptions'] + ecnt
-        #})
+        scanned = Config.get('scanned')
+        Config.set('scanned', {
+            'resources': scanned['resources'] + 1,
+            'rules': scanned['rules'] + cnt,
+            'exceptions': scanned['exceptions'] + ecnt
+        })
         
     def showInfo(self):
         print("Class: {}".format(self.classname))

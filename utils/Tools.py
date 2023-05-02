@@ -35,7 +35,6 @@ def aws_parseInstanceFamily(instanceFamilyInString):
     if not spec:
         ec2c = boto3.client('ec2', region_name=CURRENT_REGION)
         
-        print(family)
         resp = ec2c.describe_instance_types(InstanceTypes=[family])
         
         iType = resp.get('InstanceTypes')

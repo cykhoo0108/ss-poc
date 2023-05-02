@@ -45,7 +45,7 @@ class IamUser(IamCommon):
             return
         
         daySinceLastChange = self.getAgeInDay(self.user['password_last_changed'])
-        
+
         if daySinceLastChange > 365:
             key = "passwordLastChange365"
         elif daySinceLastChange > 90:

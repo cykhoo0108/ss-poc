@@ -75,7 +75,7 @@
     "needFullTest": 0,
     "criticality": "I",
     "shortDesc": "Enable auto minor version upgrade",
-    "ref": []
+    "ref": [""]
   },
   "StorageEncrypted":{
     "category": "S",
@@ -115,7 +115,7 @@
     "needFullTest": 0,
     "criticality": "M",
     "shortDesc": "Do not use default params",
-    "ref": []
+    "ref": [""]
   },
   "EnhancedMonitor":{
     "category": "O",
@@ -126,7 +126,7 @@
     "needFullTest": 0,
     "criticality": "L",
     "shortDesc": "Enable Enhanced Monitoring",
-    "ref": []
+    "ref": [""]
   },
   "DeleteProtection":{
       "category": "O",
@@ -137,7 +137,7 @@
       "needFullTest": 0,
       "criticality": "H",
       "shortDesc": "Enable Delete Protection",
-      "ref": []
+      "ref": [""]
   },
   "PubliclyAccessible":{
     "category": "S",
@@ -148,7 +148,7 @@
     "needFullTest": 0,
     "criticality": "H",
     "shortDesc": "Disable publically accesible flag.",
-    "ref": []
+    "ref": [""]
   },
   "Subnets3Az":{
     "category": "R",
@@ -159,7 +159,7 @@
     "needFullTest": 0,
     "criticality": "M",
     "shortDesc": "Use three AZs for DB SubnetGroup",
-    "ref": []
+    "ref": [""]
   },
   "LatestInstanceGeneration":{
     "category": "PC",
@@ -170,7 +170,7 @@
     "needFullTest": 0,
     "criticality": "M",
     "shortDesc": "Upgrade to Latest Generation",
-    "ref": []
+    "ref": [""]
   },
   "BurstableInstance":{
     "category": "P",
@@ -220,7 +220,7 @@
     "needFullTest": 1,
     "criticality": "M",
     "shortDesc": "Set value to 1",
-    "ref": []
+    "ref": [""]
   },
   "MYSQL__LogsErrorEnable":{
     "category": "O",
@@ -378,6 +378,19 @@
     "ref": [
       "[Add Clusters]<https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-replicas-adding.html>",
       "[Delete Clusters]<https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_DeleteCluster.html>"
+    ]
+  },
+  "MSSQL__EngineHasMultiAZSupport":{
+    "category": "RO",
+    "^description": "[MSSQL High Availability] You have {$COUNT} instance(s) which are using SQL Server Express Edition or SQL Server Web Edition. These editions of SQL Server don't offer Multi-AZ support. For production workloads you should consider using SQL Server Enterprise Edition or SQL Server Standard Edition with multi-AZ support.",
+    "downtime": 1,
+    "slowness": 0,
+    "additionalCost": 1,
+    "needFullTest": 0,
+    "criticality": "M",
+    "shortDesc": "Use SQL Server Standard / Enterprise Edition",
+    "ref": [
+      "[High Availability for MSSQL]<https://docs.aws.amazon.com/prescriptive-guidance/latest/migration-sql-server/rds-sql.html>"
     ]
   }
 }

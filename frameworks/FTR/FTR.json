@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "originator": "AWS",
+    "shortname": "FTR",
+    "fullname": "Foundational Technical Review",
+    "description": "Assesses an AWS Partner's solution against a specific set of Amazon Web Services (AWS) best practices around security, performance, and operational processes that are most critical for customer success.",
+    "_": "https://apn-checklists.s3.amazonaws.com/foundational/partner-hosted/partner-hosted/CVLHEC5X7.html"
+  },
+  "mapping": {
+    "ARC-003": [
+      "iam.rootMfaActive"
+    ],
+    "IAM-001": [
+      "iam.mfaActive"
+    ],
+    "IAM-002": [
+      "iam.passwordLastChange90",
+      "iam.passwordLastChange365"
+    ],
+    "IAM-003": [
+      "iam.passwordPolicyWeak",
+      "iam.passwordPolicy"
+    ],
+    "IAM-007": [
+      "iam.consoleLastAccess90",
+      "iam.consoleLastAccess365"
+    ]
+  }
+}

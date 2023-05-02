@@ -3,21 +3,28 @@ import json
 import re
 
 from utils.Config import Config, dashboard
+import constants as _C
 
-class reporter:
+class Reporter:
     def __init__(self, service):
         self.summary = {}
         self.summaryRegion = {}
         self.detail = {}
         self.config = {}
         self.service = service
-        serviceReporterJsonPath = Config.DIR_SERVICE + '/' + service + '/' + service + '.reporter.json'
+        
+        folder = service
+        if service in Config.KEYWORD_SERVICES:
+            folder = service + '_'
+        
+        serviceReporterJsonPath = _C.SERVICE_DIR + '/' + folder + '/' + service + '.reporter.json'
+        
         if not os.path.exists(serviceReporterJsonPath):
             print("[Fatal] " + serviceReporterJsonPath + " not found")
         self.config = json.loads(open(serviceReporterJsonPath).read())
         if not self.config:
             raise Exception(serviceReporterJsonPath + " does not contain valid JSON")
-        generalConfig = json.loads(open(Config.PATH_GENERAL_CONF).read())
+        generalConfig = json.loads(open(_C.GENERAL_CONF_PATH).read())
         self.config = {**self.config, **generalConfig}
 
     def process(self, serviceObjs):
@@ -27,6 +34,9 @@ class reporter:
                 
             if 'SERV' not in dashboard:
                 dashboard['SERV'] = {self.service: {region: {}}}
+                
+            if self.service not in dashboard['SERV']:
+                dashboard['SERV'][self.service] = {region: {}}
                 
             dashboard['SERV'][self.service][region] = {'Total': len(objs), 'H': 0}
         return self
@@ -164,9 +174,7 @@ class reporter:
             if desc:
                 COUNT = len(items)
                 COUNT = "<strong><u>{}</u></strong>".format(COUNT)
-                x = eval("\"{}\"".format(desc))
-                
-                self.cardSummary[check]['^description'] = x
+                self.cardSummary[check]['^description'] = desc.replace('{$COUNT}', COUNT)
             
             # Process category
             category = self._getConfigValue(check, 'category')
@@ -273,7 +281,7 @@ if __name__ == "__main__":
             }
         }
     }
-    reporter = reporter('rds')
+    reporter = Reporter('rds')
     reporter.process(obj).getSummary().getDetails()
     
     # o = reporter.getCard()

@@ -1,13 +1,17 @@
 import traceback
 import os
+import boto3
 
 class Config:
-    DIR_ROOT = os.getcwd()
-    DIR_SERVICE = DIR_ROOT + '/services'
-    DIR_TEMPLATE = DIR_ROOT + '/templates'
-    DIR_HTML = DIR_ROOT + '/adminlte/html'
+    # DIR_ROOT = os.getcwd()
+    # DIR_SERVICE = DIR_ROOT + '/services'
+    # DIR_TEMPLATE = DIR_ROOT + '/templates'
+    # DIR_HTML = DIR_ROOT + '/adminlte/html'
+    # DIR_FORK = DIR_ROOT + '/__fork'
     
-    PATH_GENERAL_CONF = DIR_SERVICE + '/general.reporter.json'
+    # SESSUID_FILENAME = 'sess-uuid'
+    
+    # PATH_GENERAL_CONF = DIR_SERVICE + '/general.reporter.json'
     
     AWS_SDK = {
         'RDSCLIENT_VERS': '2014-10-31',
@@ -33,8 +37,8 @@ class Config:
 
     ADVISOR = {
         'TITLE': 'Service Screener',
-        'VERSION': '1.1.0',
-        'LAST_UPDATE': '22-Feb-2023'
+        'VERSION': '2.0.0',
+        'LAST_UPDATE': '1-May-2023'
     }
 
     ADMINLTE = {
@@ -48,6 +52,10 @@ class Config:
         'iam'
     ]
     
+    KEYWORD_SERVICES = [
+        'lambda'    
+    ]
+    
     CURRENT_REGION = 'us-east-1'
     
     @staticmethod
@@ -57,30 +65,18 @@ class Config:
     
     @staticmethod
     def setAccountInfo(__AWS_CONFIG):
-        stsInfo = []
-        '''
         print(" -- Acquiring identify info...")
-        try:
-            __AWS_CONFIG['version'] = self.AWS_SDK['STSCLIENT_VERS']
-            if PHPSDK_CRED_PROVIDER in locals():
-                __AWS_CONFIG['credentials'] = PHPSDK_CRED_PROVIDER
-            elif PHPSDK_CRED_PROFILE in locals():
-                __AWS_CONFIG['profile'] = PHPSDK_CRED_PROFILE
-            
-            stsClient = StsClient(__AWS_CONFIG)
-            
-            # resp = stsClient.getCallerIdentity()
-            # stsInfo = [
-            #     'UserId': resp.get('UserId'),
-            #     'Account': resp.get('Account'),
-            #     'Arn': resp.get('Arn')
-            # ]
-        except Exception as e:
-            print('Exception happens, not catching properly')
-            traceback.print_exc()
+        stsClient = boto3.client('sts')
         
-        CONFIG.set('stsInfo', stsInfo)
-        '''
+        resp = stsClient.get_caller_identity()
+        stsInfo = {
+            'UserId': resp.get('UserId'),
+            'Account': resp.get('Account'),
+            'Arn': resp.get('Arn')
+        }
+
+        Config.set('stsInfo', stsInfo)
+        
        
     @staticmethod 
     def set(key, val):
@@ -99,8 +95,13 @@ class Config:
         
         return defaultValue
 
-dashboard = {}
-Config.init()
+try:
+    if configHasInit:
+        pass
+except NameError:
+    dashboard = {}
+    Config.init()
+    configHasInit = True
 
 if __name__ == "__main__":
     print(os.getcwd())

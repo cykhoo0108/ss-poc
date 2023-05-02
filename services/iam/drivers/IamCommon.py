@@ -1,5 +1,7 @@
-import urllib.parse
+# import urllib.parse
+from datetime import datetime
 from datetime import date
+from dateutil.parser import parse
 
 import boto3
 
@@ -11,25 +13,18 @@ class IamCommon(Evaluator):
     def getAgeInDay(self, dateTime):
         return self.getAge(dateTime, 60*60*24)
     
-    def getAgeInHour(self, dateTime):
-        return self.getAge(dateTime, 60*60)
-    
     def getAge(self, dateTime, div=60*60*24):
         if dateTime == 'N/A':
             return 999
         
-        ## <TODO>
-        # resultDate = date.create(dateTime)
-        
-        # now = time()
-        # datediff = now - resultDate.getTimestamp()
-        # return floor(datediff / div)
+        datediff = datetime.today() - parse(dateTime).replace(tzinfo=None)
+        return datediff.days
         
     def evaluateManagePolicy(self, policies):
         cachePrefix = 'iam::mpolicy::'
-
+        
+        policyWithFullAccess = []
         if policies:
-            policyWithFullAccess = []
             hasFullAccess = -1 # instead of false/true, easier handling on cache checking using !empty
             for policy in policies:
                 if policy['PolicyName'] == 'AdministratorAccess':
@@ -52,7 +47,7 @@ class IamCommon(Evaluator):
                     )
 
                     doc = detail.get('PolicyVersion')
-                    doc = urllib.parse.unquote(doc['Document'])
+                    # doc = urllib.parse.unquote(doc['Document'])
                     pObj = Policy(doc)
 
                     if pObj.hasFullAccessToOneResource() == True:
@@ -65,31 +60,34 @@ class IamCommon(Evaluator):
             self.results['ManagedPolicyFullAccessOneServ'] = [-1, '<br>'.join(policyWithFullAccess)]
             
     def evaluateInlinePolicy(self, inlinePolicies, identifier, entityType):
-        if inlinePolicies:
-            self.results['InlinePolicy'] = [-1, '<br>'.join(inlinePolicies)]
-            inlinePoliciesWithAdminAccess = []
-            inlinePoliciesWithFullAccess = []
-            for policy in inlinePolicies:
-                if entityType == 'user':
-                    resp = self.iamClient.get_user_policy(PolicyName=policy, UserName=identifier)
-                elif entityType == 'group':
-                    resp = self.iamClient.get_group_policy(PolicyName=policy, GroupName=identifier)
-                else:
-                    resp = self.iamClient.get_role_policy(PolicyName=policy, RoleName=identifier)
-                
-                doc = resp.get('PolicyDocument')
-                doc = urllib.parse.unquote(doc)
-                
-                pObj = Policy(doc)
-                pObj.inspectAccess()
-                if pObj.hasFullAccessToOneResource() == True:
-                    inlinePoliciesWithFullAccess.append(policy)
-                    
-                if pObj.hasFullAccessAdmin() == True:
-                    inlinePoliciesWithAdminAccess.append(policy)
-                
-            if inlinePoliciesWithFullAccess:
-                self.results['InlinePolicyFullAccessOneServ'] = [-1, '<br>'.join(inlinePoliciesWithFullAccess)]
+        if inlinePolicies is None:
+            return
+        
+        self.results['InlinePolicy'] = [-1, '<br>'.join(inlinePolicies)]
+        inlinePoliciesWithAdminAccess = []
+        inlinePoliciesWithFullAccess = []
+        for policy in inlinePolicies:
+            if entityType == 'user':
+                resp = self.iamClient.get_user_policy(PolicyName=policy, UserName=identifier)
+            elif entityType == 'group':
+                resp = self.iamClient.get_group_policy(PolicyName=policy, GroupName=identifier)
+            else:
+                resp = self.iamClient.get_role_policy(PolicyName=policy, RoleName=identifier)
             
-            if inlinePoliciesWithAdminAccess:
-                self.results['InlinePolicyFullAdminAccess'] = [-1, '<br>'.join(inlinePoliciesWithAdminAccess)]
+            doc = resp.get('PolicyDocument')
+            # print(doc)
+            # doc = urllib.parse.unquote(doc)
+            
+            pObj = Policy(doc)
+            pObj.inspectAccess()
+            if pObj.hasFullAccessToOneResource() == True:
+                inlinePoliciesWithFullAccess.append(policy)
+                
+            if pObj.hasFullAccessAdmin() == True:
+                inlinePoliciesWithAdminAccess.append(policy)
+            
+        if inlinePoliciesWithFullAccess:
+            self.results['InlinePolicyFullAccessOneServ'] = [-1, '<br>'.join(inlinePoliciesWithFullAccess)]
+        
+        if inlinePoliciesWithAdminAccess:
+            self.results['InlinePolicyFullAdminAccess'] = [-1, '<br>'.join(inlinePoliciesWithAdminAccess)]
