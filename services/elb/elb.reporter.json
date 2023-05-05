@@ -1,0 +1,145 @@
+{
+    "ELBListenerInsecure": {
+        "category": "S",
+        "^description": "Insecure Listener: {$COUNT} of ELB listeners are using insecure protocols. Please use secure protocols.",
+        "downtime": 0,
+        "slowness": 0,
+        "additionalCost": 0,
+        "criticality": "H",
+        "needFullTest": 0,
+        "shortDesc": "Insecure Listener",
+        "ref": [
+            "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html"    
+        ]
+    },
+    "ELBSGNumber": {
+        "category": "O",
+        "^description": "ELB Security Group Association: {$COUNT} of your ELBs have more than 50 security groups associated. Please reduce the number of security groups",        
+        "downtime": 0,
+        "slowness": 0,
+        "additionalCost": 0,
+        "criticality": "L",
+        "needFullTest": 0,
+        "shortDesc": "ELB Security Group Association",
+        "ref": [
+            "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html"    
+        ]
+    },
+    "ELBCrossZone": {
+        "category": "R",
+        "^description": "ELB Cross Zone Load Balancing: {$COUNT} of your ELBs do not have cross zone load balancing enabled. Enable cross zone load balancing to improve availability.",        
+        "downtime": 0,
+        "slowness": 0,
+        "additionalCost": 0,
+        "criticality": "H",
+        "needFullTest": 0,
+        "shortDesc": "ELB Cross Zone Load Balancing",
+        "ref": [
+            "https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-disable-az.html"    
+        ]
+    },
+    "ELBConnectionDraining": {
+        "category": "R",
+        "^description": "ELB Connection Draining: {$COUNT} of your ELBs have not enabled connection draining.",        
+        "downtime": 0,
+        "slowness": 0,
+        "additionalCost": 0,
+        "criticality": "H",
+        "needFullTest": 0,
+        "shortDesc": "ELB Connection Draining",
+        "ref": [
+            "[ELB Connection Draining]<https://aws.amazon.com/blogs/aws/elb-connection-draining-remove-instances-from-service-with-care/>"    
+        ]
+    },
+    "ELBClassicLB": {
+        "category": "O",
+        "^description": "ELB Classic Load Balancer: {$COUNT} of your ELBs are Classic Load Balancers. Migrate to a newer generation of ELB.",        
+        "downtime": 1,
+        "slowness": 0,
+        "additionalCost": 0,
+        "criticality": "H",
+        "needFullTest": 1,
+        "shortDesc": "ELB Classic Load Balancer",
+        "ref": [
+            "[Migrate your Classic Load Balancer]<https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/migrate-classic-load-balancer.html/>"    
+        ]
+    },
+    "ASGELBHealthCheckValidation": {
+        "category": "O",
+        "^description": "ELB Health Check Validation: {$COUNT} of your ASG have ELB health check enabled without ELB association.",        
+        "downtime": 0,
+        "slowness": 0,
+        "additionalCost": 0,
+        "criticality": "L",
+        "needFullTest": 0,
+        "shortDesc": "ELB Health Check Validation",
+        "ref": [
+            ""    
+        ]
+    },
+    "ASGELBHeaalthCheckEnabled": {
+        "category": "O",
+        "^description": "ELB Health Check Enabled: {$COUNT} of your ASG ELB association without ELB health check enabled",        
+        "downtime": 0,
+        "slowness": 0,
+        "additionalCost": 0,
+        "criticality": "L",
+        "needFullTest": 0,
+        "shortDesc": "ELB Health Check Enabled",
+        "ref": [
+            ""    
+        ]
+    },
+    "ASGInstancesRemoved": {
+        "category": "O",
+        "^description": "Instance Removed: {$COUNT} of your ASG have no instances association.",        
+        "downtime": 0,
+        "slowness": 0,
+        "additionalCost": 0,
+        "criticality": "L",
+        "needFullTest": 0,
+        "shortDesc": "No Instance Associated",
+        "ref": [
+            ""    
+        ]
+    },
+    "ASGTargetGroupELBExist": {
+        "category": "O",
+        "^description": "Target Group without ELB: {$COUNT} of target group your ASG have no ELB association.",        
+        "downtime": 0,
+        "slowness": 0,
+        "additionalCost": 1,
+        "criticality": "M",
+        "needFullTest": 1,
+        "shortDesc": "Target Group without ELB",
+        "ref": [
+            ""    
+        ]
+    },
+    "ASGClassicLBExist": {
+        "category": "O",
+        "^description": "Classic LB Deleted: {$COUNT} of your ASG are associated with a deleted Classic Load Balancer.",        
+        "downtime": 0,
+        "slowness": 0,
+        "additionalCost": 0,
+        "criticality": "H",
+        "needFullTest": 1,
+        "shortDesc": "Classic LB Deleted",
+        "ref": [
+            ""    
+        ]
+    },
+    "ASGAMIExist": {
+        "category": "O",
+        "^description": "Launch Configuration/Template AMI Deleted: {$COUNT} of Launch Configuration/Template AMI of your ASG are using deleted AMI",  
+        "downtime": 0,
+        "slowness": 0,
+        "additionalCost": 0,
+        "criticality": "H",
+        "needFullTest": 1,
+        "shortDesc": "Launch Configuration/Template AMI Deleted",
+        "ref": [
+            ""    
+        ]
+    }
+}
