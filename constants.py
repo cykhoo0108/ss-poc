@@ -18,3 +18,5 @@ GENERAL_CONF_PATH = SERVICE_DIR + '/general.reporter.json'
 CLI_TRUE_KEYWORD_ARRAY = ['yes', 'y', 'true', '1', 1]
 
 SESSUID_FILENAME = 'sess-uuid'
+
+NONENCRYPT_PORT = [21, 80]

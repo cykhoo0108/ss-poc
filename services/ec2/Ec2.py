@@ -94,25 +94,6 @@ class Ec2(Service):
             arr = arr + results.get('Reservations')
 
         return arr
-        
-    def getASGResources(self):
-        filters = []
-        if self.tags:
-            filters = self.tags
-        
-        results = self.asgClient.describe_auto_scaling_groups(
-            Filters = filters
-        )
-        arr = results.get('AutoScalingGroups')
-        while results.get('NextToken') is not None:
-            results = self.asgClient.describe_auto_scaling_groups(
-                Filters = filters,
-                NextToken = results.get('NextToken')
-            )
-            
-            arr = arr + results.get('AutoScalingGroups')
-        
-        return arr
     
     def advise(self):
         objs = {}
